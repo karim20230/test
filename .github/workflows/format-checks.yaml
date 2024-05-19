@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2022-2024 TII (SSRC) and the Ghaf contributors
+# SPDX-License-Identifier: Apache-2.0
+
+name: Format-checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  groovy-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Install GroovyLint
+        run: npm install -g npm-groovy-lint
+
+      - name: Run GroovyLint
+        run: npm-groovy-lint -p "**/*.groovy" --failon error
