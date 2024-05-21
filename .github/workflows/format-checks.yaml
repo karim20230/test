@@ -1,42 +1,28 @@
-name: Python Code Quality and Lint
+# This workflow checks the formatting of Groovy code in the project.
+
+name: Groovy Code Formatting
 
 on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
 
-    jobs:
-      check-format:
-        runs-on: ubuntu-latest
-        
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-    
-        - name: Set up Java
-          uses: actions/setup-java@v3
-          with:
-            distribution: 'adopt'
-            java-version: '11'
-        
-        - name: Install Groovy
-          run: sudo apt-get update && sudo apt-get install -y groovy
-    
-        - name: Install CodeNarc (Groovy Linter)
-          run: |
-            mkdir codenarc
-            curl -L https://github.com/CodeNarc/CodeNarc/releases/download/v2.0.0/CodeNarc-2.0.0.jar -o codenarc/CodeNarc-2.0.0.jar
-            echo "rulesets=rulesets/basic.xml,rulesets/braces.xml,rulesets/convention.xml,rulesets/design.xml,rulesets/dry.xml,rulesets/enhanced.xml,rulesets/exceptions.xml,rulesets/formatting.xml,rulesets/generic.xml,rulesets/grails.xml,rulesets/groovyism.xml,rulesets/imports.xml,rulesets/jdbc.xml,rulesets/junit.xml,rulesets/logging.xml,rulesets/naming.xml,rulesets/security.xml,rulesets/serialization.xml,rulesets/size.xml,rulesets/unnecessary.xml,rulesets/unused.xml" > codenarc/codenarc.properties
-    
-        - name: Run CodeNarc
-          run: groovy -cp codenarc/CodeNarc-2.0.0.jar org.codenarc.CodeNarc -rulesetfiles=codenarc/codenarc.properties -basedir=.
-    
-        - name: Format Check
-          run: |
-            if grep -q "CodeNarc Report Summary" codenarc/CodeNarc-2.0.0.html; then
-              echo "CodeNarc issues found. Please fix the formatting."
-              exit 1
-            else
-              echo "No formatting issues found."
-            fi
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install npm-groovy-lint
+        run: npm install -g npm-groovy-lint
+
+      - name: Lint Groovy code
+        run: npm-groovy-lint --fix .
+
+      - name: Check for formatting errors
+        run: npm-groovy-lint . --failOnWarning
