@@ -30,7 +30,7 @@ jobs:
           java-version: '17'
 
       - name: Install GroovyLint
-        run: npm install -g npm-groovy-lint
+        run: npm install -g npm-groovy-lint@latest
 
       - name: Run GroovyLint
         run: npm-groovy-lint -p "**/*.groovy" --failon error --verbose
