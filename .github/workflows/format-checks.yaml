@@ -13,7 +13,7 @@ on:
 
 jobs:
   groovy-lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -27,10 +27,10 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '11'
 
       - name: Install GroovyLint
         run: npm install -g npm-groovy-lint
 
       - name: Run GroovyLint
-        run: npm-groovy-lint -p "**/*.groovy" --failon error
+        run: npm-groovy-lint -p "**/*.groovy" --failon error --verbose
