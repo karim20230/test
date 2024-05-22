@@ -19,4 +19,4 @@ jobs:
       - name: Lint Groovy code (fix and check for errors)
         run: npm-groovy-lint --fix .
       - name: Check for errors only (fail on errors)
-        run: npm-groovy-lint . || true
+        run: npm-groovy-lint --failon error .
