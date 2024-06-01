@@ -16,7 +16,5 @@ jobs:
           node-version: 16
       - name: Install npm-groovy-lint
         run: npm install -g npm-groovy-lint
-      - name: Lint Groovy code (fix and check for errors)
-        run: npm-groovy-lint --fix . || true
       - name: Check for errors only (fail on errors)
-        run: npm-groovy-lint --failon error . || true
+        run: npm-groovy-lint --failon error 
