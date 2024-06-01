@@ -58,7 +58,7 @@ function Exit_message {
 }
 
 set -e
-
+#test
 MATCH=1
 while [ "$MATCH" -eq 1 ]; do
     case "${1,,}" in
@@ -131,6 +131,7 @@ fi
 if [ "$BODYLINELEN" -gt 72 ]; then
     Error "Message body contains lines longer than 72 characters"
 fi
+
 
 Check_count "Signed-off-by" "$DEST" 0
 
