@@ -1,8 +1,8 @@
-name: Check Update
+name: Check Update (Monthly)
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 0 1 * *'  # Runs on the first day of every month at midnight (UTC)
 
 jobs:
   build:
@@ -17,17 +17,18 @@ jobs:
         uses: saadmk11/github-actions-version-updater@v0.8.1
         id: check_update
 
-      - name: Push Update (if found)
-        uses: actions/checkout@v4.1.6
+      - name: Create Pull Request (if update found)
+        uses: actions/create-pull-request@v4.9.1
         if: steps.check_update.outputs.update_found == 'true'
         with:
-          token: ${{ secrets.WORKFLOW_SECRET }}
+          title: 'Automatic Update: ${{ steps.check_update.outputs.updated_version }}'
+          body: |
+            This pull request updates dependencies to their latest versions.
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "GitHub Actions"
-          git add .
-          git commit -m "Automatic Update: ${{ steps.check_update.outputs.updated_version }}"
-          git push origin main
-        if: steps.check_update.outputs.update_found == 'true'
+            **Changes:**
+
+            * ${{ steps.check_update.outputs.updated_changes }}
+
+          branch: update/auto-${{ steps.check_update.outputs.updated_version }}
+          base: main  # Replace with your desired base branch
+
