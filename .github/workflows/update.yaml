@@ -1,9 +1,8 @@
 name: Check Update
-concurrency: check
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs every 5 minutes
+    - cron: '*/5 * * * *'
 
 jobs:
   build:
@@ -16,5 +15,19 @@ jobs:
 
       - name: Check for Update
         uses: saadmk11/github-actions-version-updater@v0.8.1
+        id: check_update
+
+      - name: Push Update (if found)
+        uses: actions/checkout@v4.1.6
+        if: steps.check_update.outputs.update_found == 'true'
         with:
           token: ${{ secrets.WORKFLOW_SECRET }}
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -m "Automatic Update: ${{ steps.check_update.outputs.updated_version }}"
+          git push origin main
+        if: steps.check_update.outputs.update_found == 'true'
