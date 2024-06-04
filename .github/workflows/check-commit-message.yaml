@@ -13,7 +13,7 @@ jobs:
   commit-msg:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.6
       - name: Check Commit Message
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
